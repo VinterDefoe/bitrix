@@ -1,0 +1,12 @@
+{
+    "name": "vinter/app",
+    "authors": [
+        {
+            "name": "vinter",
+            "email": "wbmarsian@gmail.com"
+        }
+    ],
+    "require": {
+        "robmorgan/phinx": "^0.10.5"
+    }
+}
