@@ -21,10 +21,8 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
             Город<br>
             <select name="city">
                 <option value="">Выбрать</option>
-                <? $index = 1;?>
                 <? foreach ($arResult['CITY'] as $city ): ?>
-                    <option value="<?=$index?>"><?=$city['VALUE']?></option>
-                    <? $index++;?>
+                    <option value="<?=$city['ID']?>"><?=$city['VALUE']?></option>
                 <? endforeach ?>
             </select>
         </label>

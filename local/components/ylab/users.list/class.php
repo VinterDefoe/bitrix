@@ -1,6 +1,5 @@
 <?php
 
-use Bitrix\Iblock\ElementTable;
 use Bitrix\Iblock\PropertyEnumerationTable;
 use Bitrix\Iblock\PropertyTable;
 use Bitrix\Main\ArgumentException;
@@ -14,7 +13,6 @@ use YLab\Validation\ValidatorHelper;
 require_once $_SERVER['DOCUMENT_ROOT'] . '/local/modules/ylab.validation/lib/componentvalidation.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/local/modules/ylab.validation/lib/validatorhelper.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/local/modules/ylab.validation/lib/validator.php';
-
 /**
  * Class UsersListComponent
  */
@@ -23,7 +21,7 @@ class UsersAddComponent extends ComponentValidation
     /**
      * @var int Change this
      */
-    public $iIblockID = 27;
+    public $iIblockID = 1;
 
     /**
      * ValidationTestComponent constructor.
@@ -66,33 +64,6 @@ class UsersAddComponent extends ComponentValidation
     }
 
     /**
-     * @param $oRequest
-     * @return bool
-     */
-    protected function addUser($oRequest)
-    {
-        $oElement = new CIBlockElement;
-
-        $arProp = [];
-
-        $arProp['CITY'] = ['VALUE' => $oRequest['city']];
-        $arProp['DATE_OF_BIRTH'] = $oRequest['date'];
-        $arProp['TELEPHONE_NUMBER'] = $oRequest['phone'];
-
-        $arElementFilds = [
-            'IBLOCK_ID' => $this->iIblockID,
-            'PROPERTY_VALUES' => $arProp,
-            'NAME' => $oRequest['name'],
-            'ACTIVE' => 'Y',
-        ];
-
-        if($bResult = $oElement->Add($arElementFilds)){
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * @return array
      */
     protected function getCityList()
@@ -102,7 +73,7 @@ class UsersAddComponent extends ComponentValidation
         $arResult = [];
 
         $arParams = [
-            'select' => ['VALUE'],
+            'select' => ['ID', 'VALUE'],
             'filter' => ['PROPERTY_ID' => $arPropery['ID']]
         ];
 
@@ -147,7 +118,34 @@ class UsersAddComponent extends ComponentValidation
     }
 
     /**
-     * @return array 
+     * @param $oRequest
+     * @return bool
+     */
+    protected function addUser($oRequest)
+    {
+        $oElement = new CIBlockElement;
+
+        $arProp = [];
+
+        $arProp['CITY'] = ['VALUE' => $oRequest['city']];
+        $arProp['DATE_OF_BIRTH'] = $oRequest['date'];
+        $arProp['TELEPHONE_NUMBER'] = $oRequest['phone'];
+
+        $arElementFilds = [
+            'IBLOCK_ID' => $this->iIblockID,
+            'PROPERTY_VALUES' => $arProp,
+            'NAME' => $oRequest['name'],
+            'ACTIVE' => 'Y',
+        ];
+
+        if ($bResult = $oElement->Add($arElementFilds)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return array
      */
     protected function rules()
     {
