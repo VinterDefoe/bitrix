@@ -11,12 +11,24 @@ use Phinx\Migration\AbstractMigration;
 class IblockForUsers extends AbstractMigration
 {
 
+    /**
+     * @var string
+     */
     public $sIblockTypeID = 'pd_users_iblock_type';
 
+    /**
+     * @var string
+     */
     public $sIblockCode = 'pd_users_iblock';
 
+    /**
+     * @var string
+     */
     public $sSite = 's1';
 
+    /**
+     * @var int
+     */
     protected $iIblockID;
 
     /**
@@ -348,7 +360,7 @@ class IblockForUsers extends AbstractMigration
                 'NAME' => 'Номер телефона',
                 'ACTIVE' => 'Y',
                 'SORT' => 500,
-                'CODE' => 'TELEPHON_NUMBER',
+                'CODE' => 'TELEPHONE_NUMBER',
                 'DEFAULT_VALUE' => '',
                 'PROPERTY_TYPE' => 'N',
                 'ROW_COUNT' => 1,
