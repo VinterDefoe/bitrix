@@ -4,4 +4,4 @@ $MESS['CUSTOM_DATE'] = 'Дата';
 $MESS['CUSTOM_PHONE'] = 'Телефон';
 $MESS['CUSTOM_NAME'] = 'Имя';
 
-$MESS['YV_VALIDATION.USER_EXISTS'] = 'Выбранный Вами пользователь не существует.';
+$MESS['YV_VALIDATION.CITY_EXISTS'] = 'Выбранный Вами город не ненайден.';

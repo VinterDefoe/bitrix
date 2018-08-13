@@ -10,9 +10,6 @@ use Bitrix\Main\SystemException;
 use YLab\Validation\ComponentValidation;
 use YLab\Validation\ValidatorHelper;
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/local/modules/ylab.validation/lib/componentvalidation.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/local/modules/ylab.validation/lib/validatorhelper.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/local/modules/ylab.validation/lib/validator.php';
 /**
  * Class UsersListComponent
  */
@@ -24,12 +21,12 @@ class UsersAddComponent extends ComponentValidation
     public $iIblockID = 1;
 
     /**
-     * ValidationTestComponent constructor.
-     * @param \CBitrixComponent|null $component
+     * UsersAddComponent constructor.
+     * @param CBitrixComponent|null $component
      * @param string $sFile
+     * @throws Exception
+     * @throws SystemException
      * @throws \Bitrix\Main\IO\InvalidPathException
-     * @throws \Bitrix\Main\SystemException
-     * @throws \Exception
      */
     public function __construct(\CBitrixComponent $component = null, $sFile = __FILE__)
     {
@@ -50,6 +47,7 @@ class UsersAddComponent extends ComponentValidation
         $this->arResult = $this->getCityList();
 
         if ($this->oRequest->isPost() && check_bitrix_sessid()) {
+            $this->addCityValidator($this->getCityList()['CITY']);
             $this->oValidator->setData($this->oRequest->toArray());
 
             if ($this->oValidator->passes()) {
@@ -63,6 +61,19 @@ class UsersAddComponent extends ComponentValidation
         $this->includeComponentTemplate();
     }
 
+    /**
+     * @param $arCity
+     */
+    protected function addCityValidator($arCity)
+    {
+        $this->oValidator->addExtension('city_exists', function($attribute, $value) use ($arCity) {
+            $sKey = array_search($value, array_column($arCity, 'ID'));
+            if($sKey === false){
+                return false;
+            }
+            return true;
+        });
+    }
     /**
      * @return array
      */
@@ -150,7 +161,7 @@ class UsersAddComponent extends ComponentValidation
     protected function rules()
     {
         return [
-            'city' => 'required|numeric',
+            'city' => 'required|numeric|city_exists',
             'date' => 'required|date_format:d.m.Y',
             'phone' => 'required|regex:/^(\+7)[0-9]{10}$/',
             'name' => 'required|max:100'
