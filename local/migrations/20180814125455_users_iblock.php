@@ -10,12 +10,12 @@ class UsersIblock extends AbstractMigration
     /**
      * @var string
      */
-    public $sIblockTypeID = 'vd_users_iblock_type';
+    public $sIblockTypeID = 'tt_users_iblock_type';
 
     /**
      * @var string
      */
-    public $sIblockCode = 'vd_users_iblock';
+    public $sIblockCode = 'tt_users_iblock';
 
     /**
      * @var string
@@ -40,6 +40,29 @@ class UsersIblock extends AbstractMigration
     }
 
     /**
+     * @return int
+     */
+    private function getIblockID()
+    {
+        if (isset($this->iIblockID)) {
+            return $this->iIblockID;
+        }
+
+        $oIblick = CIBlock::GetList([], [
+            'TYPE' => $this->sIblockTypeID,
+            'CODE' => $this->sIblockCode,
+            "CHECK_PERMISSIONS" => "N"
+        ]);
+
+        $arResult = $oIblick->Fetch();
+
+        if ($arResult['ID'] && $arResult['ID'] > 0) {
+            $this->iIblockID = (int)$arResult['ID'];
+            return (int)$arResult['ID'];
+        }
+        return false;
+    }
+    /**
      * Migrate Up.
      * @throws Exception
      */
@@ -48,6 +71,9 @@ class UsersIblock extends AbstractMigration
         $this->addIblockType();
 
         $this->addIblock();
+
+//        $f = $this->getIblockID();
+//        var_dump($f);
 
         $this->addIblockProperty();
     }
@@ -152,6 +178,7 @@ class UsersIblock extends AbstractMigration
         if (!$Id) {
             throw new Exception('Error by adding Iblock');
         }
+        $this->iIblockID = $Id;
     }
 
     /**
@@ -164,6 +191,7 @@ class UsersIblock extends AbstractMigration
         if (!$iIblockID) {
             throw new Exception('Error by getting Iblock ID');
         }
+
         $oIblockProperty = new CIBlockProperty;
 
         $arFields = [
@@ -198,7 +226,7 @@ class UsersIblock extends AbstractMigration
                 "SORT" => "100",
                 "CODE" => "TELEPHONE_NUMBER",
                 "PROPERTY_TYPE" => "N",
-                "IBLOCK_ID" => $this->iIblockID
+                "IBLOCK_ID" => $iIblockID
             ],
             [
                 "NAME" => "Дата рождения",
@@ -206,7 +234,7 @@ class UsersIblock extends AbstractMigration
                 "SORT" => "100",
                 "CODE" => "DATE_OF_BIRTH",
                 "PROPERTY_TYPE" => "S",
-                "IBLOCK_ID" => $this->iIblockID
+                "IBLOCK_ID" => $iIblockID
             ]
         ];
 
@@ -220,25 +248,6 @@ class UsersIblock extends AbstractMigration
         }
     }
 
-    /**
-     * @return int
-     */
-    private function getIblockID()
-    {
-        if (isset($this->iIblockID)) {
-            return $this->iIblockID;
-        }
-
-        $oIblick = CIBlock::GetList([], ['TYPE' => $this->sIblockTypeID, 'CODE' => $this->sIblockCode]);
-
-        $arResult = $oIblick->Fetch();
-
-        if ($arResult['ID'] && $arResult['ID'] > 0) {
-            $this->iIblockID = (int)$arResult['ID'];
-            return (int)$arResult['ID'];
-        }
-        return false;
-    }
 
     /**
      * Migrate Down.
